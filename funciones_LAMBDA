@@ -1,0 +1,199 @@
+/* Inicio de la funcion */
+/* Funcion LAMBDA que crea un calendario en excel con un numero de mes y un numero de ano */
+/* Argumentos --> NumMes: Numero de mes, NumAno: Numero de ano */
+/* Desborda una matriz de 7 filas por 7 columnas, incluye cabecera de dias de la semana */
+Calendario = LAMBDA(NumMes, NumAno,
+    LET(
+        aSecuencia, SECUENCIA(7, 7),
+        MAP(
+            aSecuencia,
+            LAMBDA(eSecuencia,
+                CAMBIAR(
+                    eSecuencia,
+                    1,
+                    "Lun",
+                    2,
+                    "Mar",
+                    3,
+                    "Mie",
+                    4,
+                    "Jue",
+                    5,
+                    "Vie",
+                    6,
+                    "Sab",
+                    7,
+                    "Dom",
+                    LET(
+                        eFecha, (eSecuencia - 7) + FECHA(NumAno, NumMes, 1) -
+                            DIASEM(FECHA(NumAno, NumMes, 1), 2),
+                        SI(MES(eFecha) = NumMes, DIA(eFecha), "")
+                    )
+                )
+            )
+        )
+    )
+);
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* La funcion NumerosSecuenciales crea una lista de numeros secuenciales con
+la cantidad de elementos repetidos por la cantidad de items especificados, ejemplo:
+Elementos: 3 e Items: 2 --> 1.1 - 1.2 - 2.1 - 2.2 - 3.1 - 3.2 */
+NumerosSecuenciales = LAMBDA(Elementos, Items,
+    LET(
+        nSecuencia, SECUENCIA(Elementos * Items),
+        MAP(
+            nSecuencia,
+            LAMBDA(eSecuencia,
+                VALOR(
+                    CONCAT(
+                        REDONDEAR.MAS(eSecuencia / Items, 0),
+                        ".",
+                        (RESIDUO((eSecuencia) - 1, Items) + 1)
+                    )
+                )
+            )
+        )
+    )
+);
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* Esta funcion filtra los registros de una tabla de datos que contengan en una de sus
+columnas valores con deimales diferentes de cero. Ejemplo: 123.123 (Si), 123.000 (No). */
+/* Argumentos --> RangoTabla: corresponde a toda la tabla de datos
+RangoValores: corresponde a la columna que contiene los valores con decimales. */
+FiltrarRegistrosConDecimales = LAMBDA(RangoTabla, RangoValores,
+    FILTRAR(RangoTabla, NO(RESIDUO(RangoValores, 1) = 0))
+);
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* La funcion UltimaFilaLlena calcula la posicion de la ultima fila llena de una lista
+de valores dispuesta en un rango de celdas. Omite celdas con vacios creados con =""
+Esta funcion es de llamado; invoca a una funcion recursiva de nombre CalcularUltimaFilaLlena */
+/* Argumentos --> RangoLista: Rango de celdas al que se le quiere evaluar la ultima fila llena */
+UltimaFilaLlena = LAMBDA(RangoLista, CalcularUltimaFilaLlena(RangoLista, 1, 0));
+/* ---------- */
+CalcularUltimaFilaLlena = LAMBDA(vRango, vIndice, vContador,
+    SI(
+        vIndice > FILAS(vRango),
+        vContador,
+        LET(
+            vContador, SI(INDICE(vRango, vIndice) <> "", vIndice, vContador),
+            vIndice, vIndice + 1,
+            CalcularUltimaFilaLlena(vRango, vIndice, vContador)
+        )
+    )
+);
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* La funcion DistribucionEtaria calcula la distribucion de edades de un conjunto de fechas de nacimiento
+en un rango de edades de edad_inicial hasta edad_final */
+/* Argumentos --> RangoFechaNacimiento: rango de celdas que contiene las fechas de nacimiento
+RangoEdadInicial: rango de celdas que contiene valores numericos enteros con las edades inciales
+RangoEdadFinal: rango de celdas que contiene valores numeros enteros con las edades finales
+Ejemplo: desde 1 hasta 20, desde 21 hasta 40, desde 41 hasta 60, etc. */
+DistribucionEtaria = LAMBDA(RangoFechaNacimiento, RangoEdadInicial, RangoEdadFinal,
+MAP(RangoEdadInicial, RangoEdadFinal, LAMBDA(ElementoEdadInicial, ElementoEdadFinal,
+REDUCE(0, REDONDEAR((HOY() - RangoFechaNacimiento) / 365, 0),
+LAMBDA(Contador, ElementoEdad,
+SI(Y(ElementoEdad >= ElementoEdadInicial, ElementoEdad <= ElementoEdadFinal),
+Contador + 1, Contador))))));
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/*Inicio de la funcion */
+/* La funcion ContarValoresUnicosSinCeros cuenta la cantidad de elementos numericos que no tienen
+valores repetidos dentro de un rango de datos.
+Esta Funcion llama a una funcion recursiva de nombre NucleoContarValoresUnicosSinCeros
+Argumentos --> RangoCeldas: rango de celdas con los valores numericos */
+ContarValoresUnicosSinCeros = LAMBDA(RangoCeldas,
+    NucleoContarValoresUnicosSinCeros(RangoCeldas, 0, 1)
+);
+/* ********** ********** */
+NucleoContarValoresUnicosSinCeros = LAMBDA(vRango, vConteo, vIndice,
+    SI(
+        vIndice > FILAS(vRango),
+        vConteo,
+        LET(
+            vConteo, SI(
+                INDICE(vRango, vIndice) = 0,
+                vConteo,
+                SI(
+                    CONTAR.SI(vRango, INDICE(vRango, vIndice)) > 1,
+                    vConteo,
+                    vConteo + 1
+                )
+            ),
+            vIndice, vIndice + 1,
+            NucleoContarValoresUnicosSinCeros(vRango, vConteo, vIndice)
+        )
+    )
+);
+/*Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* La funcion SustituirTextos sustituye de una cadena de texto un conjunto de valores dispuesto en un rango de celdas.
+Esta funcion toma una cadena de texto y la compara con un rango de celdas buscando coincidencias para reemplazar
+desde otro rango de celdas. Es una funcion recursiva */
+SustituirTextos = LAMBDA(TextoNoDepurado, ValorInicialBuscado, ValorInicialParaCambiar,
+    SI(ValorInicialBuscado = "", TextoNoDepurado,
+        LET(TexNoDep, SUSTITUIR(TextoNoDepurado, ValorInicialBuscado, ValorInicialParaCambiar),
+            ValIniBus, DESREF(ValorInicialBuscado, 1, 0),
+            ValIniParaCam, DESREF(ValorInicialParaCambiar, 1, 0),
+            SustituirTextos(TexNoDep, ValIniBus, ValIniParaCam)
+        )
+    )
+);
+/* Fin de la funcion */
+
+/* ---------------------- */
+
+/*Inicio de la funcion */
+/* La funcion InvertirTexto invierte los caracteres de una cadena de texto pasada en su unico argumento.
+Es una funcion que llama a otra funcion que actua recursivamente */
+InvertirTexto = LAMBDA(Texto, NucleoInvertir(Texto, "", LARGO(Texto)));
+
+/* ********** ********** */
+
+NucleoInvertir = LAMBDA(vOriginal, vContenedor, vIndice,
+    SI(
+        vIndice = 0,
+        vContenedor,
+        LET(
+            Contenedor, vContenedor & EXTRAE(vOriginal, vIndice, 1),
+            Indice, vIndice - 1,
+            NucleoInvertir(vOriginal, Contenedor, Indice)
+        )
+    )
+);
+/*Fin de la funcion */
+
+/* ---------------------- */
+
+/* Inicio de la funcion */
+/* La funcion EliminarCaracteres elimina los caracteres del segundo argumento, uno por uno
+del texto del primer argumento. Es una funcion recursiva */
+EliminarCaracteres = LAMBDA(Texto, TextoEliminar,
+    SI(TextoEliminar = "", Texto,
+        EliminarCaracteres(
+            SUSTITUIR(Texto, IZQUIERDA(TextoEliminar, 1), ""),
+            DERECHA(TextoEliminar, LARGO(TextoEliminar) - 1)
+        )
+    )
+);
+/* Fin de la funcion */
