@@ -1,4 +1,51 @@
 /* Inicio de la funcion */
+/* Funcion LAMBDA que Calcula la edad detallada en  excel 
+/* Argumentos --> Fecha
+= LAMBDA(
+    Fecha_Nac,
+    SI(
+      Fecha_Nac > 0,
+        SI(
+          SIFECHA(Fecha_Nac, HOY(), "Y") > 0,
+          SIFECHA(Fecha_Nac, HOY(), "Y") & " años, ",
+          )
+      & SI(
+          SIFECHA(Fecha_Nac, HOY(), "YM") > 0,
+          SI(
+            SIFECHA(Fecha_Nac, HOY(), "MD") > 0,
+            SIFECHA(Fecha_Nac, HOY(), "YM") & " meses y ",
+            SIFECHA(Fecha_Nac, HOY(), "YM") & " meses."),
+          )
+      & SI(
+          SIFECHA(Fecha_Nac, HOY(), "MD") > 0,
+          SIFECHA(Fecha_Nac, HOY(), "MD") & " días. ",
+          ),
+      "Desconocida"))
+/* Inicio de la funcion */
+/* Funcion LAMBDA que Calcula la edad detallada en  excel en Ingles
+/* Argumentos --> Fecha
+= LAMBDA(
+    Fecha_Nac,
+    SI(
+      Fecha_Nac > 0,
+        SI(
+          SIFECHA(Fecha_Nac, HOY(), "Y") > 0,
+          SIFECHA(Fecha_Nac, HOY(), "Y") & " years, ",
+          )
+      & SI(
+          SIFECHA(Fecha_Nac, HOY(), "YM") > 0,
+          SI(
+            SIFECHA(Fecha_Nac, HOY(), "MD") > 0,
+            SIFECHA(Fecha_Nac, HOY(), "YM") & " months, ",
+            SIFECHA(Fecha_Nac, HOY(), "YM") & " months."),
+          )
+      & SI(
+          SIFECHA(Fecha_Nac, HOY(), "MD") > 0,
+          SIFECHA(Fecha_Nac, HOY(), "MD") & " days. ",
+          ),
+      "Unknown"))
+
+/* Inicio de la funcion */
 /* Funcion LAMBDA que crea un calendario en excel con un numero de mes y un numero de ano */
 /* Argumentos --> NumMes: Numero de mes, NumAno: Numero de ano */
 /* Desborda una matriz de 7 filas por 7 columnas, incluye cabecera de dias de la semana */
