@@ -1,0 +1,4 @@
+Edad Detallada
+=LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Not born yet",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,SIFECHA(Fecha_Nac,HOY(),"MD"),SI(rAño=0,"",SI(rAño=1,rAño&" year",rAño&" years"))&SI(Y(rMes>=1,rAño>0),", "," ")
+&SI(rMes=0,"",SI(rMes>1,rMes&" months ",rMes&" month "))
+&SI(cDias=0,"",SI(Y(cDias<>0, O(rAño>0,rMes>0)),", "&cDias&" days",SI(cDias=1,", "&cDias&" day",cDias&" days")))),"Unknown")))
