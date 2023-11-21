@@ -1,5 +1,5 @@
 Edad Detallada
-Ingles
+Inglés
 =LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Not born yet",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,
 SIFECHA(Fecha_Nac,HOY(),"MD"),
 SI(rAño=0,"",SI(rAño=1,rAño&" year",rAño&" years"))&SI(Y(rMes>=1,rAño>0),", "," ")
