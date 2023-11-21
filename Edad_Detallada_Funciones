@@ -1,13 +1,32 @@
 Edad Detallada
-=LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Not born yet",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,SIFECHA(Fecha_Nac,HOY(),"MD"),SI(rAño=0,"",SI(rAño=1,rAño&" year",rAño&" years"))&SI(Y(rMes>=1,rAño>0),", "," ")
-&SI(rMes=0,"",SI(rMes>1,rMes&" months ",rMes&" month "))
-&SI(cDias=0,"",SI(Y(cDias<>0, O(rAño>0,rMes>0)),", "&cDias&" days",SI(cDias=1,", "&cDias&" day",cDias&" days")))),"Unknown")))
+Ingles
+=LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Not born yet",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,
+SIFECHA(Fecha_Nac,HOY(),"MD"),
+SI(rAño=0,"",SI(rAño=1,rAño&" year",rAño&" years"))&SI(Y(rMes>=1,rAño>0),", "," ")
+&SI(rMes=0,"",SI(rMes>1,rMes&" months",rMes&" month"))&SI(cDias=0,"",SI(Y(cDias<>0, O(rAño>0,rMes>0)),", "&cDias&" days",
+SI(cDias=1,", "&cDias&" day",cDias&" days")))),"Unknown")))
 
-=LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Todavía no ha Nacido",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,SIFECHA(Fecha_Nac,HOY(),"MD"),SI(rAño=0,"",SI(rAño=1,rAño&" año",rAño&" años"))&SI(Y(rMes>=1,rAño>0),", "," ")
-&SI(rMes=0,"",SI(rMes>1,rMes&" meses ",rMes&" mes "))
-&SI(cDias=0,"",SI(Y(cDias<>0, O(rAño>0,rMes>0)),"y "&cDias&" días",SI(cDias=1,"y "&cDias&" día",cDias&" días")))),"Desconocida")))
+Español
+=LAMBDA(Fecha_Nac,SI(Fecha_Nac>HOY(),"Todavía no ha Nacido",SI(Fecha_Nac>0,LET(rAño,SIFECHA(Fecha_Nac,HOY(),"Y"),rMes,
+SIFECHA(Fecha_Nac,HOY(),"YM"),cDias,SIFECHA(Fecha_Nac,HOY(),"MD"),SI(rAño=0,"",SI(rAño=1,rAño&" año",rAño&" años"))
+&SI(rAño=0,"",SI(Y(rAño>0,rMes>0, cDias=0)," y ",SI(Y(rAño>0,rMes=0, cDias>0), "",SI(cDias=0," y ", ", "))))
+&SI(rMes=0,"",SI(rMes>1,rMes&" meses",rMes&" mes"))&SI(cDias=0,"",
+SI(Y(cDias<>0, O(rAño>0,rMes>0))," y "&cDias&" días",SI(cDias=1,"y "&cDias&" día",cDias&" días")))),"Desconocida")))
 
-Edad: SiInm([nacidos]>Fecha(),"Todavía no ha nacido",SiInm([nacidos]>0,SiInm([rAño]=0,"",SiInm([rAño]=1,[rAño] & " año",[rAño] & " años")) 
-& SiInm([rMes]>=1 Y [rAño]>0,", "," ") & SiInm([rMes]=0,"",SiInm([rMes]>1,[rMes] & " meses ",[rMes] & " mes ")) 
-& SiInm([cDias]=0,"",SiInm((([cDias]<>0) Y ([rAño]>0 O [rMes]>0)),"y " & [cDias] & " días",SiInm([cDias]=1,"y " 
-& [cDias] & " día",[cDias] & " días"))),"Desconocida"))
+Access en Español
+cAño: SiInm([Nacidos]>0,SiInm(DifFecha("aaaa",[Nacidos],Ahora())>0,
+SiInm(Mes([nacidos])>Mes(Ahora()),DifFecha("aaaa",[Nacidos],Ahora())-1,DifFecha("aaaa",[Nacidos],Ahora())),0),"Desconocido")
+
+rAño: Val(SiInm([cMes]<0,[cAño]-1,[cAño]))*1
+
+cMes: SiInm(Día([Nacidos])>Día(Ahora()),DifFecha("m",AgregFecha("aaaa",[cAño],[Nacidos]),Ahora())-1,
+DifFecha("m",AgregFecha("aaaa",[cAño],[Nacidos]),Ahora()))
+
+rMes: SiInm([cMes]<0,[cMEs]+12,[cMes])
+
+cDias: DifFecha("d",AgregFecha("m",[rAño]*12+[rMes],[Nacidos]),Ahora())
+
+Edad: SiInm([nacidos]>Fecha(),"Todavía no ha nacido",SiInm([nacidos]>0,SiInm([rAño]=0,"",SiInm([rAño]=1,[rAño] & " año",[rAño] & " años"))
+& SiInm([rAño]=0,"",SiInm(([rAño]>0 Y [rMes]>0 Y [cDias]=0)," y ",SiInm(([rAño]>0 Y [rMes]=0 Y [cDias]>0),", ",SiInm([cDias]=0," y "," "))))
+&SiInm([rMes]=0,"",SiInm([rMes]>1,[rMes] & " meses ",[rMes] & " mes "))& SiInm([cDias]=0,"",SiInm((([cDias]<>0) Y ([rAño]>0 O [rMes]>0)),"y " 
+& [cDias] & " días",SiInm([cDias]=1,"y " & [cDias] & " día",[cDias] & " días"))),"Desconocida"))
