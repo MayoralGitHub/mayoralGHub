@@ -13,13 +13,19 @@
           cDias,
           SIFECHA(Fecha_Nac, HOY(), "MD"),
             SI(rAño = 0, "", SI(rAño = 1, rAño & " año", rAño & " años"))
-          & SI(Y(rMes >= 1, rAño > 0), ", ", " ")
-          & SI(rMes = 0, "", SI(rMes > 1, rMes & " meses ", rMes & " mes "))
+          & SI(
+              rAño = 0,
+              "",
+              SI(
+                Y(rAño > 0, rMes > 0, cDias = 0),
+                " y ",
+                SI(Y(rAño > 0, rMes = 0, cDias > 0), "", SI(cDias = 0, " y ", ", "))))
+          & SI(rMes = 0, "", SI(rMes > 1, rMes & " meses", rMes & " mes"))
           & SI(
               cDias = 0,
               "",
               SI(
                 Y(cDias <> 0, O(rAño > 0, rMes > 0)),
-                "y " & cDias & " días",
+                " y " & cDias & " días",
                 SI(cDias = 1, "y " & cDias & " día", cDias & " días")))),
         "Desconocida")))
